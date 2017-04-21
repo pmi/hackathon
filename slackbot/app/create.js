@@ -11,7 +11,7 @@ const request = require('request'),
  * - milestone
  * - labels
  */
-module.exports = function (issue, repo) {
+module.exports.create = function (issue, repo) {
 
     const url = `${settings.github.api}/repos/${settings.github.owner}/${repo || settings.github.repo}/issues`,
         options = {
@@ -20,7 +20,8 @@ module.exports = function (issue, repo) {
             headers: {
                 'User-Agent':   'Super Agent/0.0.1',
                 'Content-Type': 'application/x-www-form-urlencoded'
-            }
+            },
+            form:    issue
         };
 
     return new Promise(function (resolve, reject) {
@@ -34,3 +35,5 @@ module.exports = function (issue, repo) {
         });
     });
 };
+
+module.exports.regex = /^(?:create) (bug|issue|task)?([\w\s:\-+]{3,}?(?= in| for|$))(?: for (me|@\w+))?(?: in (\w+))?/gm;

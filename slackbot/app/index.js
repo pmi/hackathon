@@ -1,6 +1,8 @@
 // Require libraries.
 const botkit = require('botkit'),
-    settings = require('../settings');
+    settings = require('../settings'),
+    create = require('./create');
+
 
 // Create slackbot controller.
 const controller = botkit.slackbot({
@@ -8,7 +10,7 @@ const controller = botkit.slackbot({
     send_via_rtm:    true,
     json_file_store: './db'
 });
-console.log('Token: ' + JSON.stringify(settings));
+
 // Create the slackbot.
 const slackBot = controller.spawn({
     // IMPORTANT! Do not check in this token to GIT.
@@ -16,8 +18,18 @@ const slackBot = controller.spawn({
 });
 
 // Listen for a direct message.
-controller.hears([/^hello robot$/i], ['direct_message'], function (bot, message) {
-    bot.reply(message, 'Hello Human!');
+controller.hears([create.regex], ['direct_message', 'direct_mention'], function (bot, message) {
+    bot.reply(message, 'Working, Human!');
+
+    create.create({
+        title:     message.match[2],
+        body:      undefined,
+        assignees: [message.match[3]],
+        milestone: undefined,
+        labels:    message.match[1]
+    }, message.match[4]).then(function (response) {
+        console.log(response);
+    });
 });
 
 // Start real-time messaging.
