@@ -7,23 +7,34 @@ const request = require('request'),
  * @param searchRequest : {user:string, repo:string, date: Date}
  */
 module.exports.search = function search(searchRequest) {
-    const url = `${settings.github.api}/repos/${settings.github.owner}/${searchRequest.repo || settings.github.repo}/issues`;
+    const url = `${settings.github.api}/repos/${settings.github.owner}/${searchRequest.repo ||
+                                                                         settings.github.repo}/issues`;
 
-    const properties = {assignee: searchRequest.user};
-
-    //   const day = moment().day('Monday');
-
-    // console.log('-------------------------' + moment().format(day));
+    const query = {assignee: searchRequest.user};
     if (searchRequest.date) {
-        // properties['since'] = moment().day('Monday')//'2017-04-15'//searchRequest.date;
+        let since = moment();
+        switch (searchRequest.date) {
+            case 'yesterday':
+                since.subtract(1, 'day');
+                break;
+            case 'today':
+                break;
+            default:
+                since.day(searchRequest.date);
+                if (since.isSameOrAfter(Date.now())) {
+                    since.subtract('7', 'days');
+                }
+                break;
+        }
+        query['since'] = since.startOf('day').format();
     }
 
     const options = {
-        url: url,
-        method: 'GET',
-        qs: properties,
+        url:     url,
+        method:  'GET',
+        qs:      query,
         headers: {
-            'User-Agent': 'Super Agent/0.0.1',
+            'User-Agent':   'Super Agent/0.0.1',
             'Content-Type': 'application/x-www-form-urlencoded'
         },
     };
@@ -31,20 +42,18 @@ module.exports.search = function search(searchRequest) {
     return new Promise(function (resolve, reject) {
         request(options, function (error, response, body) {
             if (error || response.statusCode !== 200) {
-                reject(error);
+                reject(error || body && body.message);
             }
 
             let result = '';
-
             const json = JSON.parse(body);
-
             if (typeof json == 'object' && json.length) {
-                json.forEach((issue) => {
+                json.forEach(function (issue) {
                     result += issue.title + '\n' + issue.html_url + '\n';
                 });
             }
 
-            resolve(result);
+            resolve(result.length == 0 ? 'Nothing found :(' : result);
         });
     });
 };
@@ -83,7 +92,8 @@ function getUser(message) {
 
         if (match && match[1] != 'me') {
             return match[1];
-            // return match ? match[3] ? settings.github.user : match[2] ? match[2] : settings.github.user : settings.github.user;
+            // return match ? match[3] ? settings.github.user : match[2] ? match[2] : settings.github.user :
+            // settings.github.user;
         }
         return settings.github.user;
     }
