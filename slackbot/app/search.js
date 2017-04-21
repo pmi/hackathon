@@ -78,10 +78,18 @@ function getRepo(message) {
 
 function getUser(message) {
     if (message) {
-        const pattern = /\s+((?:@)([a-zA-Z]+)|(me))/i;
+        const pattern = /\s+for\s+(([a-zA-Z]+)|(me))/i;
         const match = pattern.exec(message);
 
-        return match ? match[3] ? settings.github.user : match[2] ? match[2] : settings.github.user : settings.github.user;
+        if(match) {
+            if(match[3]) {
+                return settings.github.user;
+            } else if(match[2]) {
+                return match[2];
+            }
+        }
+        return settings.github.user;
+        // return match ? match[3] ? settings.github.user : match[2] ? match[2] : settings.github.user : settings.github.user;
     }
 }
 
