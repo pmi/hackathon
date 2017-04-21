@@ -21,18 +21,22 @@ module.exports.create = function (issue, repo) {
                 'User-Agent':   'Super Agent/0.0.1',
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            form:    issue
+            auth:    {
+                // 'user': settings.github.user,
+                // 'pass': settings.github.pass,
+                'bearer': settings.github.token
+            },
+            json:    issue
         };
 
     return new Promise(function (resolve, reject) {
         request(options, function (error, response, body) {
-            let json = JSON.parse(body);
-            if (error || response.statusCode !== 200) {
-                reject(error || json.message);
+            if (error || response.statusCode !== 201) {
+                reject(error || body && body.message);
             }
-            resolve(json);
+            resolve(body.url);
         });
     });
 };
 
-module.exports.regex = /^(?:create)(bug|issue|task)?([\w\s:\-+]{3,}?(?=\sin|\sfor|$))(?:\sfor\s(me|@\w+))?(?:\sin\s(\w+))?/i;
+module.exports.regex = /^(?:create )(bug|issue|task)?([\w\s:\-+]{3,}?(?=\sin|\sfor|$))(?:\sfor\s(me|\w+))?(?:\sin\s(\w+))?/i;

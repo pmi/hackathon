@@ -19,17 +19,28 @@ const slackBot = controller.spawn({
 
 // Listen for a direct message.
 controller.hears([create.regex], ['direct_message', 'direct_mention'], function (bot, message) {
+    const title = message.match[2];
+    if (!title) {
+        bot.reply(message, 'Title is required! \nSyntax: create [issue|task|bug] <title> [for <user>] [in <repo>]');
+        return;
+    }
+    let assignee = message.match[3];
+    if (assignee == 'me') {
+        assignee = settings.github.user;
+    }
+    let label = message.match[1];
     create.create({
         title:     message.match[2],
-        body:      undefined,
-        assignees: [message.match[3]],
-        milestone: undefined,
-        labels:    message.match[1] || 'issue'
-    }, message.match[4]).then(function (response) {
-        bot.reply(message, response);
-    }).catch(function(error) {
-        bot.reply(message, `Oops! ${error}`);
-    });
+        body:      'Created by bot to be done by humans!',
+        assignees: assignee ? [assignee] : undefined,
+        labels:    [label || 'issue']
+    }, message.match[4])
+          .then(function (response) {
+              bot.reply(message, `Done! ${response}`);
+          })
+          .catch(function (error) {
+              bot.reply(message, `Oops! ${error}`);
+          });
 });
 
 // Start real-time messaging.
