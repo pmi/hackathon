@@ -22,8 +22,6 @@ module.exports.create = function (issue, repo) {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
             auth:    {
-                // 'user': settings.github.user,
-                // 'pass': settings.github.pass,
                 'bearer': settings.github.token
             },
             json:    issue
@@ -34,9 +32,9 @@ module.exports.create = function (issue, repo) {
             if (error || response.statusCode !== 201) {
                 reject(error || body && body.message);
             }
-            resolve(body.url);
+            resolve(body.html_url);
         });
     });
 };
 
-module.exports.regex = /^(?:create )(bug|issue|task)?([\w\s:\-+]{3,}?(?=\sin|\sfor|$))(?:\sfor\s(me|\w+))?(?:\sin\s(\w+))?/i;
+module.exports.regex = /^(?:create)(bug|issue|task)?([\w\s:\-+!]{3,}?(?=\sin|\sfor|$))?(?:\sfor\s(me|\w+))?(?:\sin\s(\w+))?/i;

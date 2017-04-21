@@ -34,10 +34,10 @@ controller.hears([create.regex], ['direct_message', 'direct_mention'], function 
         title:     message.match[2],
         body:      'Created by bot to be done by humans!',
         assignees: assignee ? [assignee] : undefined,
-        labels:    [label || 'issue']
+        labels:    label ? [label] : undefined
     }, message.match[4])
           .then(function (response) {
-              bot.reply(message, `Done! ${response}`);
+              bot.reply(message, `Here you go: ${response}`);
           })
           .catch(function (error) {
               bot.reply(message, `Oops! ${error}`);
