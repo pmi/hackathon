@@ -3,7 +3,7 @@ const request = require('request'),
     moment = require('moment');
 
 /**
- * Finds a github issues
+ * Returns a github issues
  * @param searchRequest : {user:string, repo:string, date: Date}
  */
 module.exports.search = function search(searchRequest) {
@@ -11,9 +11,9 @@ module.exports.search = function search(searchRequest) {
 
     const properties = {assignee: searchRequest.user};
 
- //   const day = moment().day('Monday');
+    //   const day = moment().day('Monday');
 
-   // console.log('-------------------------' + moment().format(day));
+    // console.log('-------------------------' + moment().format(day));
     if (searchRequest.date) {
         // properties['since'] = moment().day('Monday')//'2017-04-15'//searchRequest.date;
     }
@@ -78,18 +78,14 @@ function getRepo(message) {
 
 function getUser(message) {
     if (message) {
-        const pattern = /\s+for\s+(([a-zA-Z]+)|(me))/i;
+        const pattern = /\s+for\s+(\w+)/i;
         const match = pattern.exec(message);
 
-        if(match) {
-            if(match[3]) {
-                return settings.github.user;
-            } else if(match[2]) {
-                return match[2];
-            }
+        if (match && match[1] != 'me') {
+            return match[1];
+            // return match ? match[3] ? settings.github.user : match[2] ? match[2] : settings.github.user : settings.github.user;
         }
         return settings.github.user;
-        // return match ? match[3] ? settings.github.user : match[2] ? match[2] : settings.github.user : settings.github.user;
     }
 }
 
