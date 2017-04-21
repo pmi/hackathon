@@ -26,14 +26,13 @@ module.exports.create = function (issue, repo) {
 
     return new Promise(function (resolve, reject) {
         request(options, function (error, response, body) {
-            if (error || response.statusCode !== 200) {
-                reject(error);
-            }
-
             let json = JSON.parse(body);
+            if (error || response.statusCode !== 200) {
+                reject(error || json.message);
+            }
             resolve(json);
         });
     });
 };
 
-module.exports.regex = /^(?:create) (bug|issue|task)?([\w\s:\-+]{3,}?(?= in| for|$))(?: for (me|@\w+))?(?: in (\w+))?/gm;
+module.exports.regex = /^(?:create)(bug|issue|task)?([\w\s:\-+]{3,}?(?=\sin|\sfor|$))(?:\sfor\s(me|@\w+))?(?:\sin\s(\w+))?/i;

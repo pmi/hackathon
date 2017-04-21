@@ -19,16 +19,16 @@ const slackBot = controller.spawn({
 
 // Listen for a direct message.
 controller.hears([create.regex], ['direct_message', 'direct_mention'], function (bot, message) {
-    bot.reply(message, 'Working, Human!');
-
     create.create({
         title:     message.match[2],
         body:      undefined,
         assignees: [message.match[3]],
         milestone: undefined,
-        labels:    message.match[1]
+        labels:    message.match[1] || 'issue'
     }, message.match[4]).then(function (response) {
-        console.log(response);
+        bot.reply(message, response);
+    }).catch(function(error) {
+        bot.reply(message, `Oops! ${error}`);
     });
 });
 
