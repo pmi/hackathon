@@ -41,12 +41,12 @@ module.exports.search = function search(searchRequest) {
 
     return new Promise(function (resolve, reject) {
         request(options, function (error, response, body) {
+            const json = JSON.parse(body);
             if (error || response.statusCode !== 200) {
-                reject(error || body && body.message);
+                reject(error || json && json.message);
             }
 
             let result = '';
-            const json = JSON.parse(body);
             if (typeof json == 'object' && json.length) {
                 json.forEach(function (issue) {
                     result += issue.title + '\n' + issue.html_url + '\n';
