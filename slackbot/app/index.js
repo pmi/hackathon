@@ -1,6 +1,6 @@
 // Require libraries.
-const botkit = require('botkit');
-const settings = require('../settings');
+const botkit = require('botkit'),
+    settings = require('../settings');
 
 // Create slackbot controller.
 const controller = botkit.slackbot({
@@ -8,7 +8,7 @@ const controller = botkit.slackbot({
     send_via_rtm:    true,
     json_file_store: './db'
 });
-
+console.log('Token: ' + JSON.stringify(settings));
 // Create the slackbot.
 const slackBot = controller.spawn({
     // IMPORTANT! Do not check in this token to GIT.
