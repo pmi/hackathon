@@ -11,10 +11,10 @@ module.exports.search = function search(searchRequest) {
 
     const properties = {assignee: searchRequest.user};
 
-    const day = moment().day('Monday');
+ //   const day = moment().day('Monday');
 
-    console.log('-------------------------'+moment().format(day));
-    if(searchRequest.date) {
+   // console.log('-------------------------' + moment().format(day));
+    if (searchRequest.date) {
         // properties['since'] = moment().day('Monday')//'2017-04-15'//searchRequest.date;
     }
 
@@ -81,7 +81,7 @@ function getUser(message) {
         const pattern = /\s+((?:@)([a-zA-Z]+)|(me))/i;
         const match = pattern.exec(message);
 
-        return match ? match[3] ? match[3] : match[2] ? match[2] : 'me' : 'me';
+        return match ? match[3] ? settings.github.user : match[2] ? match[2] : settings.github.user : settings.github.user;
     }
 }
 
