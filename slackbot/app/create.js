@@ -13,7 +13,7 @@ const request = require('request'),
  */
 module.exports = function (issue, repo) {
 
-    const url = `${settings.github.api}/repos/${settings.github.user}/${repo || settings.github.repo}/issues`,
+    const url = `${settings.github.api}/repos/${settings.github.owner}/${repo || settings.github.repo}/issues`,
         options = {
             url:     url,
             method:  'POST',
