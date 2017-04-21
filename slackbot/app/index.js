@@ -2,6 +2,7 @@
 const botkit = require('botkit'),
     settings = require('../settings'),
     create = require('./create');
+const search = require('./search');
 
 
 // Create slackbot controller.
@@ -41,6 +42,16 @@ controller.hears([create.regex], ['direct_message', 'direct_mention'], function 
           .catch(function (error) {
               bot.reply(message, `Oops! ${error}`);
           });
+});
+
+controller.hears([/^find/i], ['direct_message', 'direct_mention'], function (bot, message) {
+
+    const searchRequest = search.parseSearchMessage(message.text);
+    search.search(searchRequest).then((result) => {
+        return bot.reply(message, result)
+    }).catch(function (error) {
+        bot.reply(message, `Oops! ${error}`);
+    });
 });
 
 // Start real-time messaging.
