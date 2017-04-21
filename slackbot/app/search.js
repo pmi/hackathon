@@ -21,7 +21,7 @@ module.exports.search = function search(searchRequest) {
                 break;
             default:
                 since.day(searchRequest.date);
-                if (since.isSameOrAfter(Date.now())) {
+                if (since.isSameOrAfter(Date.now(), 'day')) {
                     since.subtract('7', 'days');
                 }
                 break;
