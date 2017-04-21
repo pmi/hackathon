@@ -1,6 +1,6 @@
 // Require libraries.
 const botkit = require('botkit');
-const settings = require('../../settings');
+const settings = require('../settings');
 
 // Create slackbot controller.
 const controller = botkit.slackbot({
