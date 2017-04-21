@@ -37,4 +37,4 @@ module.exports.create = function (issue, repo) {
     });
 };
 
-module.exports.regex = /^(?:create)(bug|issue|task)?([\w\s:\-+!]{3,}?(?=\sin|\sfor|$))?(?:\sfor\s(me|\w+))?(?:\sin\s(\w+))?/i;
+module.exports.regex = /^(?:create\s)(bug|issue|task)?([\w\s:\-+!]{3,}?(?=\sin\s|\sfor\s|$))?(?:\sfor\s(me|\w+))?(?:\sin\s(\w+))?/i;
